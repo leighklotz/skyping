@@ -1,9 +1,9 @@
-# Provenance Document: `flightwatch.sh`
+# Provenance Document: `skyping.sh`
 
 ## 1. Overview
-**Project Name:** FlightWatch Script Development
-**Target Toolchain:** Answer Agent / Hallux Framework
-**Primary Objective:** Develop a robust Bash script to monitor real-time ADS-B aircraft data via JSON and send an email alert containing flight details once a specific tail number/flight identifier is detected.
+* **Project Name:** Skyping Script Development
+* **Target Toolchain:** Answer Agent / Hallux Framework
+* **Primary Objective:** Develop a robust Bash script to monitor real-time ADS-B aircraft data via JSON and send an email alert containing flight details once a specific tail number/flight identifier is detected.
 
 ---
 
@@ -11,13 +11,12 @@
 The development of the final script relied on three primary sources:
 
 ### A. Real-Time API Endpoint (External)
-* **URL:** `http://adsb-rx-1.klotz.me/tar1090/data/aircraft.json`
+* **URL:** `http://adsb.example.com/tar1090/data/aircraft.json`
 * **Format:** JSON array containing real-time aircraft telemetry (hex code, type, altitude, groundspeed, track, lat/long, squawk).
 
 ### B. Workspace Context (Local)
 The agent was provided with local context via the `lx` and `bx` tools:
 * **Command History:** Full `.bash_history` containing previous iterations of failed scripts and manual debugging attempts.
-* **File Iterations:** Multiple versions of partial/broken Bash scripts (`flightwatch-1.sh`, `flightwatch-2.sh`, etc.) stored in the `.hallux/` directory to allow for comparative analysis.
 
 ### C. User Input (Arguments)
 The script was designed to accept two runtime arguments:
@@ -34,7 +33,7 @@ The final script is the result of an iterative "evolutionary" prompting process 
 **Prompt:**
 > *"write a bash script thst takrs a flight number such as DAL656 and an email addrress and then fetches this airplane.json oncr a minute until tue flight appears and then the scri0pt fornats the info received in email to the address ajd tuwn exits"*
 
-**Result:** Created `flightwatch-1.sh`.
+**Result:** Created `skyping-1.sh`.
 * **Status:** ❌ Failed.
 * **Error Root Cause:** "Backslash Hell." The script attempted manual string concatenation within a `jq` filter using escaped double quotes (`\"`). Due to how Bash passes single-quoted strings to `jq`, the parser interpreted the escape sequences as literal characters, causing syntax errors in the `jq` engine.
 
@@ -42,15 +41,15 @@ The final script is the result of an iterative "evolutionary" prompting process 
 **Prompt:**
 > *"write a bash script that takes a flight number such as DAL656 and an email address and then fetches this airplane.json once a minute until the flight appears and then the script formats the info received in email to the address and exits."*
 
-**Result:** Created versions `flightwatch-2.sh` through `flightwatch-2-2.sh`.
+**Result:** Created versions `skyping-2.sh` through `skyping-2-2.sh`.
 * **Status:** ❌ Partial Failure / Inconsistent.
 * **Error Root Cause:** Continued struggles with nested quoting (the "quote hell" problem) while trying to build complex human-readable text blocks via concatenation (`+`).
 
 ### Phase III: Synthesis & Final Optimization
 **Prompt (Synthesis Prompt):**
-> *"Fix my flightwatch bash script. Write the final, good bash script you synthesize from these attempts. Use tools to read the files. Analyze, and then output the one script in a bash fence."*
+> *"Fix my skyping bash script. Write the final, good bash script you synthesize from these attempts. Use tools to read the files. Analyze, and then output the one script in a bash fence."*
 
-**Result:** Created `flightwatch.sh` (The Final Version).
+**Result:** Created `skyping.sh` (The Final Version).
 * **Status:** ✅ Success.
 * **Key Engineering Improvement:** Abandoned manual string concatenation (`"text" + variable + "text"`) in favor of **JQ String Interpolation** (`\"\(variable)\"`). This approach eliminated the need for complex backslash escaping, making the `jq` filter syntactically simple and robust against shell-parsing errors.
 

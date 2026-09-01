@@ -2,6 +2,8 @@
 
 `skyping.sh` is a lightweight bash utility designed to monitor live ADS-B aircraft telemetry via a JSON feed. When a specific flight number enters the monitored airspace, the script extracts detailed flight information (altitude, speed, position, etc.) and sends an immediate email alert to a designated recipient.
 
+![screenshot](doc/screenshot.png)
+
 ## Features
 
 *   **Real-time Monitoring**: Polls the ADS-B data source every 60 seconds.
